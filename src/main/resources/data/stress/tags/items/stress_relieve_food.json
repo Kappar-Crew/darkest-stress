@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:cooked_porkchop",
+    "minecraft:golden_apple",
+    "minecraft:enchanted_golden_apple",
+    "minecraft:cooked_cod",
+    "minecraft:cooked_salmon",
+    "minecraft:cookie",
+    "minecraft:cooked_chicken",
+    "minecraft:cooked_beef",
+    "minecraft:baked_potato",
+    "minecraft:pumpkin_pie",
+    "minecraft:cooked_rabbit",
+    "minecraft:cooked_mutton",
+    "minecraft:glow_berries",
+    "minecraft:honey_bottle"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "item.darkeststress.stress_inflictor": "Stress Inflictor",
+  "item.darkeststress.stress_resetor": "Stress Resetor",
+  "item.darkeststress.stress_ball": "Stress Ball",
+  "item.darkeststress.stress_meter": "Stress Meter",
+
+  "itemGroup.darkeststress": "Darkest Stress",
+
+  "darkeststress.tooltip.item.creative": "Creative item!",
+
+  "stress.affliction.roll.motivated": "You have rolled Motivated affliction.",
+  "stress.affliction.roll.fearless": "You have rolled Fearless affliction.",
+  "stress.affliction.roll.resistant": "You have rolled Resistant affliction.",
+
+  "stress.affliction.roll.hungry": "You have rolled Hungry affliction.",
+  "stress.affliction.roll.tired": "You have rolled Tired affliction.",
+  "stress.affliction.roll.insomniac": "You have rolled Insomniac affliction.",
+
+  "effect.darkeststress.heart_attack" : "Heart Attack"
+}
