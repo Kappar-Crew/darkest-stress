@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "ISI",
+    "III"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:sculk_sensor"
+    },
+    "#": {
+      "item": "minecraft:iron_bars"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "darkeststress:stress_meter"
+  }
+}
