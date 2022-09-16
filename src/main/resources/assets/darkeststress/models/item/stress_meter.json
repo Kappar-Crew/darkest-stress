@@ -1,6 +1,26 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "darkeststress:item/stress_meter"
-  }
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "darkeststress:item/stress_meter_0"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "stress": 1
+            },
+            "model": "darkeststress:item/stress_meter_1"
+        },
+        {
+            "predicate": {
+                "stress": 2
+            },
+            "model": "darkeststress:item/stress_meter_2"
+        },
+        {
+            "predicate": {
+                "stress": 3
+            },
+            "model": "darkeststress:item/stress_meter_3"
+        }
+    ]
 }

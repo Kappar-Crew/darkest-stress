@@ -8,10 +8,10 @@ license="All rights reserved"
 [[mods]]
 
 modId="darkeststress"
-version="1.0"
+version="1.1"
 displayName="Darkest Stress"
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/"
-logoFile="stress.png"
+logoFile="darkeststress.png"
 #credits="Yes :]" #optional
 authors="Purplik"
 

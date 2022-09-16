@@ -8,8 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class HeartAttackEffect extends MobEffect {
 
-    private int heartAttackCooldown;
-
     public HeartAttackEffect(MobEffectCategory p_19451_, int p_19452_) {
         super(p_19451_, p_19452_);
     }
@@ -17,13 +15,7 @@ public class HeartAttackEffect extends MobEffect {
     @Override
     public void applyEffectTick(LivingEntity entity, int p_19468_) {
         super.applyEffectTick(entity, p_19468_);
-
-        if(heartAttackCooldown >= 40) {
-            entity.hurt(DamageSource.MAGIC, 1.0F);
-            heartAttackCooldown = 0;
-        }
-        heartAttackCooldown++;
-//        entity.sendSystemMessage(Component.literal("Stress cooldown: " + stressCooldown));
+        entity.hurt(DamageSource.MAGIC, 5.0F);
     }
 
     @Override

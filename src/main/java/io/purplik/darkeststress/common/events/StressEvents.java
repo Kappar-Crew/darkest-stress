@@ -177,9 +177,9 @@ public class StressEvents {
                 playerStress.setStress(0);
                 playerStress.setAfflictionType("none");
             } else if(Arrays.stream(playerStress.negativeAfflictions).anyMatch(playerStress.getAfflictionType()::equals) && StressCommonConfigs.STRESS_CAUSE_HEART_ATTACK.get()) {
-                event.player.addEffect(new MobEffectInstance(EffectInit.HEART_ATTACK.get(), 200));
+                event.player.addEffect(new MobEffectInstance(EffectInit.HEART_ATTACK.get(), 400));
             } else {
-                event.player.sendSystemMessage(Component.literal("IDK, somehow you broke it"));
+//                event.player.sendSystemMessage(Component.literal("IDK, somehow you broke it"));
             }
         }
     }

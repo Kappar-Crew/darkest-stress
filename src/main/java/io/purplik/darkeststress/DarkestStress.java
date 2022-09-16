@@ -1,6 +1,7 @@
 package io.purplik.darkeststress;
 
 
+import io.purplik.darkeststress.client.ModelHandler;
 import io.purplik.darkeststress.config.StressCommonConfigs;
 import io.purplik.darkeststress.init.BlockInit;
 import io.purplik.darkeststress.init.EffectInit;
@@ -10,6 +11,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -23,7 +25,7 @@ public class DarkestStress
     public DarkestStress()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::onClientSetup);
 
         ItemInit.ITEM.register(modEventBus);
         BlockInit.BLOCK.register(modEventBus);
@@ -37,6 +39,11 @@ public class DarkestStress
     private void commonSetup(final FMLCommonSetupEvent event)
     {
 
+    }
+
+    @SubscribeEvent
+    public void onClientSetup(FMLClientSetupEvent event) {
+        ModelHandler.onClientSetup(event);
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
