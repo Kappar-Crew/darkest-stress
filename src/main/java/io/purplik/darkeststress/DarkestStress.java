@@ -18,7 +18,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(DarkestStress.MOD_ID)
-public class DarkestStress
+public class  DarkestStress
 {
     public static final String MOD_ID = "darkeststress";
 

@@ -9,6 +9,9 @@ import io.purplik.darkeststress.util.StressTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.ServerStatsCounter;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -16,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -111,6 +115,12 @@ public class StressEvents {
                         event.player.displayClientMessage(Component.literal(event.player.getScoreboardName() + " has lost stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
                     }
                 }
+                ServerStatsCounter serverstatscounter = ((ServerPlayer)event.player).getStats();
+                if(serverstatscounter.getValue(Stats.CUSTOM.get(Stats.TIME_SINCE_REST)) > 36000) {
+                    float stressModifier = serverstatscounter.getValue(Stats.CUSTOM.get(Stats.TIME_SINCE_REST)) * 0.0001f;
+                    System.out.println(stressModifier);
+                    randomizeStress(playerStress, event, stressModifier);
+                }
 
                 testAffliction(playerStress, event);
                 checkStress(playerStress, event);
@@ -137,6 +147,16 @@ public class StressEvents {
                     playerStress.removeStress(random.nextInt(6) + 1);
                     ((Player) event.getEntity()).displayClientMessage(Component.literal(event.getEntity().getScoreboardName() + " has lost stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
                 }
+            });
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerDamagedByMob(LivingDamageEvent damageEvent) {
+        if(damageEvent.getEntity() instanceof Player) {
+            damageEvent.getEntity().getCapability(PlayerStressProvider.PLAYER_STRESS).ifPresent(playerStress -> {
+                playerStress.addStress(random.nextInt(5) + 1);
+                ((Player) damageEvent.getEntity()).displayClientMessage(Component.literal( ((Player) damageEvent.getEntity()).getScoreboardName() + " has gained stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
             });
         }
     }
