@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.ServerStatsCounter;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -153,7 +154,7 @@ public class StressEvents {
 
     @SubscribeEvent
     public static void onPlayerDamagedByMob(LivingDamageEvent damageEvent) {
-        if(damageEvent.getEntity() instanceof Player) {
+        if(damageEvent.getEntity() instanceof Player && damageEvent.getSource() == DamageSource.GENERIC) {
             damageEvent.getEntity().getCapability(PlayerStressProvider.PLAYER_STRESS).ifPresent(playerStress -> {
                 playerStress.addStress(random.nextInt(5) + 1);
                 ((Player) damageEvent.getEntity()).displayClientMessage(Component.literal( ((Player) damageEvent.getEntity()).getScoreboardName() + " has gained stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
