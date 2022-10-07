@@ -4,6 +4,8 @@ import io.purplik.darkeststress.common.stress.PlayerStressProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -24,7 +26,8 @@ public class StressMeter extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         if (!level.isClientSide()) {
             player.getCapability(PlayerStressProvider.PLAYER_STRESS).ifPresent(playerStress -> {
-                player.sendSystemMessage(Component.literal("You have " + playerStress.getStress() + " stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
+                String message = "You have " + playerStress.getStress() + " stress";
+                player.sendMessage(new TextComponent(message).withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY),  player.getUUID());
             });
         }
 

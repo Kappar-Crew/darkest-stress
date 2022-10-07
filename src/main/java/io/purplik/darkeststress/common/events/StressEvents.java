@@ -7,7 +7,10 @@ import io.purplik.darkeststress.common.stress.PlayerStress;
 import io.purplik.darkeststress.common.stress.PlayerStressProvider;
 import io.purplik.darkeststress.util.StressTags;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.ServerStatsCounter;
@@ -17,6 +20,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.lighting.LayerLightEventListener;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
@@ -94,8 +99,14 @@ public class StressEvents {
             */
 
             event.player.getCapability(PlayerStressProvider.PLAYER_STRESS).ifPresent(playerStress -> {
-                float lightLevel = event.player.getLightLevelDependentMagicValue();
-                if(lightLevel < 0.1f && StressCommonConfigs.LIGHT_CAUSE_STRESS.get()) {
+
+                LayerLightEventListener block = event.player.level.getLightEngine().getLayerListener(LightLayer.BLOCK);
+                LayerLightEventListener sky =  event.player.level.getLightEngine().getLayerListener(LightLayer.SKY);
+
+                int blockLightLevel = block.getLightValue(event.player.getOnPos().offset(0, 1, 0));
+                int skyLightLevel = sky.getLightValue(event.player.getOnPos().offset(0, 1, 0));
+
+                if(blockLightLevel < 6 && skyLightLevel < 6 && StressCommonConfigs.LIGHT_CAUSE_STRESS.get()) {
                     randomizeStress(playerStress, event, 1f);
                 }
 
@@ -113,7 +124,7 @@ public class StressEvents {
                     if(playerStress.getStress() < playerStress.max_stress && event.player.getRandom().nextFloat() < 0.005f && !rolling) {
                         int randomizedStress = (int)Math.ceil((random.nextInt(6) + 10));
                         playerStress.removeStress(randomizedStress);
-                        event.player.displayClientMessage(Component.literal(event.player.getScoreboardName() + " has lost stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
+                        event.player.displayClientMessage(new TextComponent(event.player.getScoreboardName() + " has lost stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
                     }
                 }
                 ServerStatsCounter serverstatscounter = ((ServerPlayer)event.player).getStats();
@@ -138,15 +149,15 @@ public class StressEvents {
             event.getEntity().getCapability(PlayerStressProvider.PLAYER_STRESS).ifPresent(playerStress -> {
                 if(event.getItem().is(StressTags.Items.STRESS_GAIN_FOOD)) {
                     playerStress.addStress(random.nextInt(3) + 2);
-                    ((Player) event.getEntity()).displayClientMessage(Component.literal(event.getEntity().getScoreboardName() + " has gained stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
+                    ((Player) event.getEntity()).displayClientMessage(new TextComponent(event.getEntity().getScoreboardName() + " has gained stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
                 }
                 if(event.getItem().is(StressTags.Items.STRESS_RELIEVE_FOOD)) {
                     playerStress.removeStress(random.nextInt(5) + 6);
-                    ((Player) event.getEntity()).displayClientMessage(Component.literal(event.getEntity().getScoreboardName() + " has lost stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
+                    ((Player) event.getEntity()).displayClientMessage(new TextComponent(event.getEntity().getScoreboardName() + " has lost stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
                 }
                 if(event.getItem().is(StressTags.Items.STRESS_SLIGHT_RELIEVE_FOOD)) {
                     playerStress.removeStress(random.nextInt(6) + 1);
-                    ((Player) event.getEntity()).displayClientMessage(Component.literal(event.getEntity().getScoreboardName() + " has lost stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
+                    ((Player) event.getEntity()).displayClientMessage(new TextComponent(event.getEntity().getScoreboardName() + " has lost stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
                 }
             });
         }
@@ -157,7 +168,7 @@ public class StressEvents {
         if(damageEvent.getEntity() instanceof Player && damageEvent.getSource() == DamageSource.GENERIC) {
             damageEvent.getEntity().getCapability(PlayerStressProvider.PLAYER_STRESS).ifPresent(playerStress -> {
                 playerStress.addStress(random.nextInt(5) + 1);
-                ((Player) damageEvent.getEntity()).displayClientMessage(Component.literal( ((Player) damageEvent.getEntity()).getScoreboardName() + " has gained stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
+                ((Player) damageEvent.getEntity()).displayClientMessage(new TextComponent( ((Player) damageEvent.getEntity()).getScoreboardName() + " has gained stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
             });
         }
     }
@@ -166,25 +177,25 @@ public class StressEvents {
         if(playerStress.getStress() < playerStress.max_stress && event.player.getRandom().nextFloat() < 0.0005f && !rolling) {
             int randomizedStress = (int)Math.ceil((random.nextInt(5) + 1) * stressModifier);
             playerStress.addStress(randomizedStress);
-            event.player.displayClientMessage(Component.literal(event.player.getScoreboardName() + " has gained stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
+            event.player.displayClientMessage(new TextComponent(event.player.getScoreboardName() + " has gained stress").withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY), true);
         }
     }
 
     private static void testAffliction(PlayerStress playerStress, TickEvent.PlayerTickEvent event) {
         if(playerStress.getStress() >= 50 && playerStress.getAfflictionType() == "none") {
-            if(!rolling) { event.player.sendSystemMessage(Component.literal(event.player.getScoreboardName() + " is being tested").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY)); }
+            if(!rolling) { event.player.sendMessage(new TextComponent(event.player.getScoreboardName() + " is being tested").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY), event.player.getUUID()); }
             rolling = true;
             rollCooldown++;
             if(rollCooldown >= 200) {
                 if ((random.nextInt(11) % 2) == 0) {
-                    event.player.displayClientMessage(Component.literal(event.player.getScoreboardName() + " passed").withStyle(ChatFormatting.ITALIC, ChatFormatting.BOLD, ChatFormatting.GOLD), true);
+                    event.player.displayClientMessage(new TextComponent(event.player.getScoreboardName() + " passed").withStyle(ChatFormatting.ITALIC, ChatFormatting.BOLD, ChatFormatting.GOLD), true);
                     playerStress.setAfflictionType(playerStress.positiveAfflictions[random.nextInt(playerStress.positiveAfflictions.length)]);
-                    event.player.sendSystemMessage(Component.translatable("stress.affliction.roll." + playerStress.getAfflictionType()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC));
+                    event.player.sendMessage(new TranslatableComponent("stress.affliction.roll." + playerStress.getAfflictionType()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC), event.player.getUUID());
                     playerStress.setStress(0);
                 } else {
-                    event.player.displayClientMessage(Component.literal(event.player.getScoreboardName() + " failed").withStyle(ChatFormatting.ITALIC, ChatFormatting.BOLD, ChatFormatting.DARK_RED), true);
+                    event.player.displayClientMessage(new TextComponent(event.player.getScoreboardName() + " failed").withStyle(ChatFormatting.ITALIC, ChatFormatting.BOLD, ChatFormatting.DARK_RED), true);
                     playerStress.setAfflictionType(playerStress.negativeAfflictions[random.nextInt(playerStress.negativeAfflictions.length)]);
-                    event.player.sendSystemMessage(Component.translatable("stress.affliction.roll." + playerStress.getAfflictionType()).withStyle(ChatFormatting.DARK_RED).withStyle(ChatFormatting.ITALIC));
+                    event.player.sendMessage(new TranslatableComponent("stress.affliction.roll." + playerStress.getAfflictionType()).withStyle(ChatFormatting.DARK_RED).withStyle(ChatFormatting.ITALIC), event.player.getUUID());
                 }
                 rolling = false;
                 rollCooldown = 0;

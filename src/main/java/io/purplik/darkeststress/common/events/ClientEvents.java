@@ -1,3 +1,4 @@
+/*
 package io.purplik.darkeststress.common.events;
 
 import io.purplik.darkeststress.DarkestStress;
@@ -17,3 +18,4 @@ public class ClientEvents {
         }
     }
 }
+*/

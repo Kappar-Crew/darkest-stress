@@ -1,7 +1,7 @@
 
 modLoader="javafml"
 
-loaderVersion="[41,)"
+loaderVersion="[40,)"
 
 license="All rights reserved"
 
@@ -21,15 +21,15 @@ description='''
 Mod that aims to add stress into the game for more careful player management while taking inspiration from Darkest Dungeon and Thaumcraft.
 '''
 
-[[dependencies.reforgedarmory]]
+[[dependencies.darkeststress]]
     modId="forge"
     mandatory=true
-    versionRange="[43,)"
+    versionRange="[40,)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.reforgedarmory]]
+[[dependencies.darkeststress]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.2,1.20)"
+    versionRange="[1.18.2,1.19)"
     ordering="NONE"
     side="BOTH"
